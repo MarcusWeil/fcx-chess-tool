@@ -1,0 +1,102 @@
+<div class="modal-overlay" *ngIf="isVisible">
+  <div class="modal-content">
+    <button class="close" (click)="closeModal()">X</button>
+    <div [ngSwitch]="modalType">
+      <div *ngSwitchCase="'search'">
+        <h2>Consultar Torneios</h2>
+        <div class="search-container">
+          <input type="text" [(ngModel)]="searchQuery" placeholder="Digite o código ou nome do torneio" />
+          <button (click)="performSearch()">Buscar</button>
+        </div>
+        <div *ngIf="searchResults.length > 0">
+          <h3>Resultados:</h3>
+          <ul class="search-results">
+            <li *ngFor="let result of searchResults">
+              <div class="search-item" (click)="toggleExpansion(result.tournament)">
+                {{ result.tournament }}
+              </div>
+              <div *ngIf="expandedTournament === result.tournament" class="search-details">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Nome do Jogador</th>
+                      <th>Score</th>
+                      <th>Rating</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let data of result.results">
+                      <td>{{ data.playerName }}</td>
+                      <td>{{ data.score }}</td>
+                      <td>{{ data.rating }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div *ngSwitchCase="'register-tournament'">
+        <h2>Cadastrar Torneio</h2>
+        <div class="tournament-container">
+          <input type="text" [(ngModel)]="searchQuery" placeholder="Digite o nome do torneio" class="tournament-name"/>
+          <input id="tournamentID" type="number" [(ngModel)]="rating" placeholder="ID do Torneio" class="tournament-id"/>
+        </div>
+        <div style="width: 100%;">
+          <button style="width: 100%;" class="register-tournament-btn" (click)="performSearch()">Cadastrar</button>
+        </div>
+      </div>
+      <div *ngSwitchCase="'register'">
+        <h2>Cadastrar Resultados</h2>
+        <div class="register-container">
+          <label for="tournament">Torneio:</label>
+          <select id="tournament" [(ngModel)]="selectedTournament" (change)="onTournamentChange()">
+            <option value="" disabled selected>Selecione um torneio</option>
+            <option *ngFor="let tournament of tournaments" [value]="tournament">{{ tournament }}</option>
+          </select>
+          <label for="playerName">Nome do jogador:</label>
+          <input id="playerName" type="text" [(ngModel)]="playerName" placeholder="Nome do jogador" />
+          <label for="score">Score:</label>
+          <input id="score" type="number" [(ngModel)]="score" placeholder="Score" />
+          <label for="rating">Rating:</label>
+          <input id="rating" type="number" [(ngModel)]="rating" placeholder="Rating" />
+          <button (click)="registerResults()">Registrar</button>
+        </div>
+      </div>
+      <div *ngSwitchCase="'export'">
+        <h2>Exportar Planilha</h2>
+        <div class="export-container">
+          <label for="exportTournament">Torneio:</label>
+          <select id="exportTournament" [(ngModel)]="selectedTournament" (change)="onTournamentChange()">
+            <option value="" disabled selected>Selecione um torneio</option>
+            <option *ngFor="let tournament of tournaments" [value]="tournament">{{ tournament }}</option>
+          </select>
+          <div *ngIf="selectedTournamentData.length > 0">
+            <h3>Dados do Torneio:</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome do Jogador</th>
+                  <th>Score</th>
+                  <th>Rating</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of selectedTournamentData">
+                  <td>{{ data.playerName }}</td>
+                  <td>{{ data.score }}</td>
+                  <td>{{ data.rating }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <button (click)="exportData()">Exportar Dados</button>
+        </div>
+      </div>
+      <div *ngSwitchDefault>
+        <h2>Unknown Modal</h2>
+      </div>
+    </div>
+  </div>
+</div>

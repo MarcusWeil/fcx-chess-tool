@@ -1,0 +1,29 @@
+<div class="banner">
+  <h1>Gerenciador de Torneios</h1><img src="assets/chess-banner.png" alt="">
+  <p>Gerencie resultados, consulte partidas e exporte dados.</p>
+</div>
+
+<div class="card-container">
+  <div class="card" (click)="openModal('search')">
+    <img src="assets/icons/search.svg" alt="Consultar Torneios">
+    <h3>Consultar Torneios</h3>
+  </div>
+  <div class="card" (click)="openModal('register-tournament')">
+    <img src="assets/icons/trophy.png" alt="Cadastrar Torneio">
+    <h3>Cadastrar Torneios</h3>
+  </div>
+  <div class="card" (click)="openModal('register')">
+    <img src="assets/icons/register.png" alt="Cadastrar Resultados">
+    <h3>Cadastrar Resultados</h3>
+  </div>
+  <div class="card" (click)="openModal('export')">
+    <img src="assets/icons/export.png" alt="Exportar Planilha">
+    <h3>Exportar Planilha</h3>
+  </div>
+</div>
+
+<app-modal 
+  [isVisible]="isModalVisible" 
+  [modalType]="modalType" 
+  (close)="handleModalClose()">
+</app-modal>

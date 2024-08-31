@@ -1,0 +1,127 @@
+/* modal.component.css */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 12px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 500px;
+  position: relative;
+}
+
+.close {
+  background-color: #fff;
+  border: 1px solid #adadad;
+  font-size: 16px;
+  cursor: pointer;
+  position: absolute;
+  right: 20px;
+  border-radius: 40px;
+  padding: 4px 8px;
+}
+
+.close:hover {
+  transform: translateY(1px);
+}
+
+.search-item{
+  margin-left: -80px;
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+.search-item:hover{
+  background-color: #f2f2f2;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+}
+
+.search-details table td {
+  padding: 8px 16px; 
+}
+
+
+.search-details table tr {
+  margin-bottom: 16px; 
+}
+
+
+.search-details table th {
+  padding: 10px 16px;
+}
+
+.search-container, .register-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-container input, .register-container input, .register-container select, .tournament-container input, .export-container select {
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.search-container button, .register-container button, .export-container button, .register-tournament-btn {
+  font-size: 16px;
+  margin-top: 16px;
+  padding: 8px;
+  background-color: #90bf59;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.search-container button:hover, .register-container button:hover, .export-container button:hover {
+  background-color: #77a542;
+}
+
+.search-results {
+  margin-top: 20px;
+}
+.export-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.export-container select, .export-container table {
+  margin-bottom: 16px;
+}
+
+.export-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.export-container table th, .export-container table td {
+  padding: 8px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+.tournament-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tournament-container .tournament-name {
+  flex: 6;
+}
+
+.tournament-container .tournament-id {
+  flex: 3;
+}
