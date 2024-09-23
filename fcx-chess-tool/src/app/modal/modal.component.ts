@@ -1,4 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FcxService } from './fcxService.service';
+import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-modal',
@@ -6,6 +9,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: ['./modal.component.scss']
 })
 export class ModalComponent {
+
+  constructor(private fcxService: FcxService) {}
+
   @Input() isVisible = false;
   @Input() modalType: string | null = null;
   @Output() close = new EventEmitter<void>();
@@ -14,16 +20,16 @@ export class ModalComponent {
   searchResults: { tournament: string, results: any[] }[] = [];
   expandedTournament: string | null = null;
 
-
-  tournaments: string[] = [];
+  tournaments: any[] = [];
   selectedTournament: string = '';
   playerName: string = '';
   score: number | null = null;
   rating: number | null = null;
 
-
   tournamentData: { [key: string]: any[] } = {};
   selectedTournamentData: any[] = [];
+  loading: boolean = false;
+  errorMessage: string = '';
 
   ngOnInit() {
     this.fetchTournaments();
@@ -31,10 +37,23 @@ export class ModalComponent {
   }
 
   fetchTournaments() {
-    this.tournaments = ['Torneio 1', 'Torneio 2', 'Torneio 3'];
+    this.loading = true;
+    this.fcxService.fetchTournaments()
+      .pipe(
+        catchError(error => {
+          this.errorMessage = 'Error fetching tournaments. Please try again later.';
+          this.loading = false;
+          return of([]);  // Return an empty array in case of error
+        })
+      )
+      .subscribe(tournaments => {
+        this.tournaments = tournaments;
+        this.loading = false;
+      });
   }
 
   fetchTournamentData() {
+    // Simulated tournament data (can be replaced with an actual API call)
     this.tournamentData = {
       'Torneio 1': [
         { playerName: 'Jogador 1', score: 10, rating: 2000 },
@@ -77,11 +96,26 @@ export class ModalComponent {
   }
 
   registerResults() {
-    console.log('Registration Details:', {
+    const resultData = {
       tournament: this.selectedTournament,
       playerName: this.playerName,
       score: this.score,
       rating: this.rating
+    };
+
+    if (!this.selectedTournament || !this.playerName || this.score === null || this.rating === null) {
+      this.errorMessage = 'Please fill out all the fields.';
+      return;
+    }
+
+    this.fcxService.submitResults(resultData).subscribe({
+      next: () => {
+        console.log('Results successfully submitted:', resultData);
+        this.closeModal();
+      },
+      error: () => {
+        this.errorMessage = 'Failed to submit results. Please try again.';
+      }
     });
   }
 
@@ -94,6 +128,35 @@ export class ModalComponent {
   }
 
   exportData() {
-    console.log('Exporting data for:', this.selectedTournament);
+    if (!this.selectedTournament) {
+      this.errorMessage = 'No tournament selected to export.';
+      return;
+    }
+
+    try {
+      const csvContent = this.convertToCSV(this.selectedTournamentData);
+      this.downloadCSV(`${this.selectedTournament}-results.csv`, csvContent);
+      console.log('Exporting data for:', this.selectedTournament);
+    } catch (error) {
+      this.errorMessage = 'Failed to export data. Please try again.';
+    }
+  }
+
+  convertToCSV(data: any[]): string {
+    if (!data || !data.length) {
+      throw new Error('No data available for export.');
+    }
+
+    const headers = ['Player Name', 'Score', 'Rating'];
+    const rows = data.map(d => [d.playerName, d.score, d.rating].join(','));
+    return [headers.join(','), ...rows].join('\n');
+  }
+
+  downloadCSV(filename: string, csvContent: string) {
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
   }
 }

@@ -34,9 +34,11 @@
 .close:hover {
   transform: translateY(1px);
 }
-
+ul{
+  list-style-type: none;
+}
 .search-item{
-  margin-left: -80px;
+  margin-left: -40px;
   border: 1px solid #ccc;
   padding: 8px;
 }
