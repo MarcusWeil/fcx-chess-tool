@@ -1,4 +1,4 @@
-# fcx-chess-tool
+# fcx-chess-tool ANGULAR Frontend e Spring Boot Backend
 Tool for Exporting and keeping track of chess tournaments and results.
 ![image](https://github.com/user-attachments/assets/45c9d56a-982f-4529-a81d-71b61adb2d82)
 
