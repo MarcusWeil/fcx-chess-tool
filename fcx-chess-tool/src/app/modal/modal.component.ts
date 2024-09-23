@@ -43,7 +43,7 @@ export class ModalComponent {
         catchError(error => {
           this.errorMessage = 'Error fetching tournaments. Please try again later.';
           this.loading = false;
-          return of([]);  // Return an empty array in case of error
+          return of([]);
         })
       )
       .subscribe(tournaments => {
@@ -53,19 +53,13 @@ export class ModalComponent {
   }
 
   fetchTournamentData() {
-    // Simulated tournament data (can be replaced with an actual API call)
-    this.tournamentData = {
-      'Torneio 1': [
-        { playerName: 'Jogador 1', score: 10, rating: 2000 },
-        { playerName: 'Jogador 2', score: 20, rating: 1800 }
-      ],
-      'Torneio 2': [
-        { playerName: 'Jogador 3', score: 15, rating: 1900 }
-      ],
-      'Torneio 3': [
-        { playerName: 'Jogador 4', score: 25, rating: 2100 }
-      ]
-    };
+    this.fcxService.fetchTournaments().subscribe(tournaments => {
+      this.tournamentData = tournaments.reduce((acc: { [x: string]: any; }, tournament: { name: string | number; results: any; }) => {
+        acc[tournament.name] = tournament.results;
+        return acc;
+      }, {});
+      this.selectedTournamentData = this.tournamentData[this.selectedTournament] || [];
+    });
   }
 
   closeModal() {
